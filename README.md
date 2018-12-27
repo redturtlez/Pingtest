@@ -1,0 +1,2 @@
+# Pingtest
+osrs ping tester
