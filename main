@@ -1,6 +1,7 @@
 import subprocess
 import re
 import time
+import os
 
 worlds = [2, 5, 6, 7, 9, 10,
           13, 14, 15, 17, 19, 20,
@@ -17,13 +18,21 @@ worlds = [2, 5, 6, 7, 9, 10,
           192, 193, 194, 195, 196,
           214, 215, 216, 217, 218, 219, 220,
           221, 222, 223, 224, 225]
+juice = {}
 start = time.time()
+print("Running Ping Tester, Please allow up to 10 seconds depending on your speed")
 for world in worlds:
     address = "oldschool" + str(world) + ".runescape.com"
     ping = subprocess.Popen(["ping", address, "-n", "1"],
                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
     output = ping.communicate()
-    pattern = r"Average = (\d+\S+)"
-    print(re.findall(pattern, output[0].decode())[0])
+    pattern = r"Average = (\d+)"
+    out = re.findall(pattern, output[0].decode())[0]
+    juice["world " + str(world)] = int(out)
+sortedjuice = sorted(juice.items(), key=lambda x: x[1])
 end = time.time()
-print(end - start)
+for key, value in sortedjuice[0:20]:
+    print("{} has ping {}ms".format(key, value))
+print("Took {} seconds to run".format(end-start))
+os.system("pause")
+
